@@ -1,187 +1,256 @@
 # BioSignal Framework
 
-**A modular open-source framework for acquisition, preprocessing, feature extraction, and classification of biosignals (EMG, ECG, EOG).**
+A comprehensive framework for biosignal processing, simulation, and analysis supporting EMG, ECG, and EOG signals.
 
----
+## Project Overview
 
-## 📘 Overview
+The BioSignal Framework is a powerful, modular toolkit designed for biosignal processing and analysis. It provides extensive capabilities for:
 
-The **BioSignal Framework** is a unified, extensible research toolkit designed for biosignal processing and machine learning applications.
-It provides a consistent API for handling **electromyography (EMG)**, **electrocardiography (ECG)**, and **electrooculography (EOG)** signals—covering the entire pipeline from signal acquisition to feature extraction and classification.
+- Signal acquisition and simulation
+- Preprocessing and noise reduction
+- Feature extraction across multiple domains
+- Machine learning model development
+- Real-time processing and visualization
 
-This framework is intended for:
+Key Features:
+- Multi-signal support (EMG, ECG, EOG)
+- Advanced simulation capabilities
+- Comprehensive noise and artifact modeling
+- Real-time processing pipeline
+- Extensive feature extraction library
+- Modular and extensible architecture
 
-- Biomedical signal processing research
-- Embedded ML biosignal prototyping
-- Wearable and neurophysiology applications
-- Machine learning model development and benchmarking
+## Installation Instructions
 
----
+### Prerequisites
+- Python ≥ 3.9
+- NumPy
+- SciPy
+- Matplotlib
+- scikit-learn
+- PyWavelets (pywt)
+- pandas
+- IPython (for notebooks)
 
-## 🧩 Architecture
+### Installation Steps
 
-The framework follows a **layered modular architecture**, allowing flexibility and reusability.
-
-```
-biosignal_framework/
-│
-├── acquisition/          # Signal loading & acquisition interfaces
-│   ├── emg_acquisition.py
-│   ├── ecg_acquisition.py
-│   ├── eog_acquisition.py
-│
-├── preprocessing/        # Signal denoising, normalization, segmentation
-│   ├── filters.py
-│   ├── segmentation.py
-│
-├── features/             # Feature extraction across domains
-│   ├── time_domain.py
-│   ├── frequency_domain.py
-│   ├── nonlinear_features.py
-│
-├── models/               # ML model training and inference
-│   ├── classifier.py
-│   ├── pipeline.py
-│
-├── utils/                # Helper utilities (I/O, visualization, etc.)
-│   ├── io_utils.py
-│   ├── visualization.py
-│
-├── tests/                # Unit tests for all components (pytest)
-│
-├── notebooks/
-│   └── demo_emg_pipeline.ipynb  # Example: EMG acquisition → preprocessing → features → ML
-│
-└── README.md
-```
-
----
-
-## ⚙️ Installation
-
-### Requirements
-
-Python ≥ 3.9
-Required libraries:
-
+1. Clone the repository:
 ```bash
-numpy scipy matplotlib scikit-learn pywt pandas
+git clone https://github.com/yourusername/biosig.git
+cd biosig
 ```
 
-### Setup
-
+2. Install dependencies:
 ```bash
-git clone https://github.com/<your-username>/biosignal-framework.git
-cd biosignal-framework
-pip install -r requirements.txt
+pip install numpy scipy matplotlib scikit-learn pywt pandas ipython
 ```
 
----
+## Module Documentation
 
-## 🧠 Core Concepts
+### 1. Simulation Module (`simulation.py`)
 
-### 1. Acquisition
+The simulation module provides comprehensive biosignal generation capabilities:
 
-Supports offline and real-time acquisition via:
+#### Base Simulator
+- Configurable sampling rate and duration
+- Noise addition (Gaussian, powerline)
+- Artifact injection capabilities
 
-- File-based loaders (CSV, EDF, MAT)
-- Serial or BLE streaming (for embedded sensors)
-- Synthetic generators for testing
+#### Signal-Specific Simulators:
 
-### 2. Preprocessing
+**EMG Simulator**
+- Isometric contractions
+- Dynamic patterns
+- Fatigue modeling
+- Complex movement sequences
 
-Implements:
+**ECG Simulator**
+- Normal sinus rhythm
+- Arrhythmias (PVC, AF)
+- Conduction abnormalities
+- Ischemia patterns
 
-- Bandpass and notch filtering
-- Baseline correction
-- Segmentation
+**EOG Simulator**
+- Saccadic movements
+- Smooth pursuit
+- Fixations
+- Blink patterns
+
+**Noise Simulator**
+- Electrode artifacts
+- Motion artifacts
+- Environmental interference
+- Powerline noise
+
+### 2. Preprocessing Module
+
+- Signal filtering (bandpass, notch)
 - Wavelet denoising
+- Normalization
+- Segmentation
 
-### 3. Feature Extraction
+### 3. Feature Extraction Module
 
-Feature sets include:
+- Time domain features
+- Frequency domain analysis
+- Nonlinear features
+- Custom feature pipelines
 
-- **Time-domain:** Mean, RMS, MAV, Zero-Crossing, IQR
-- **Frequency-domain:** PSD, spectral centroid, median frequency
-- **Nonlinear:** Entropy, fractal dimension
+### 4. Models Module
 
-### 4. Modeling
+- Classical ML models
+- Pipeline management
+- Model evaluation tools
+- Real-time prediction
 
-Supports:
+## Usage Examples
 
-- Classical ML models (SVM, RandomForest, LinearRegression)
-- Deep learning integration (PyTorch, TensorFlow ready)
-- Pipeline orchestration for training and validation
-
----
-
-## 📊 Example Workflow
-
-The included Jupyter Notebook (`notebooks/demo_emg_pipeline.ipynb`) demonstrates:
-
+### 1. Basic Signal Generation
 ```python
-from biosignal_framework.acquisition.emg_acquisition import EMGAcquisition
-from biosignal_framework.preprocessing.filters import bandpass_filter
-from biosignal_framework.features.time_domain import extract_time_features
-from biosignal_framework.models.pipeline import BioSignalPipeline
+from simulation import EMGSimulator
 
-# 1. Acquire
-signal = EMGAcquisition().load('data/sample_emg.csv')
+# Create EMG simulator
+sim = EMGSimulator(sampling_rate=1000, duration=5.0)
 
-# 2. Preprocess
-filtered = bandpass_filter(signal, 20, 450, fs=1000)
+# Generate basic EMG signal
+signal = sim.generate(activation_level=0.7)
 
-# 3. Extract Features
-features = extract_time_features(filtered)
-
-# 4. Model Training
-pipeline = BioSignalPipeline(model='svm')
-pipeline.train(features, labels)
+# Add noise and artifacts
+noisy_signal = sim.add_noise(signal, noise_type='gaussian', noise_params={'std': 0.1})
+signal_with_artifact = sim.add_artifact(noisy_signal, 'spike', start_time=2.0, duration=0.1)
 ```
 
----
+### 2. Complex Signal Patterns
+```python
+# Generate dynamic contraction
+dynamic_signal = sim.simulate_dynamic_contraction(
+    pattern='ramp',
+    max_intensity=0.8
+)
 
-## 🧪 Testing
+# Generate repetitive movement
+repetitive_signal = sim.simulate_repetitive_movement(
+    frequency=1.0,
+    intensity=0.7
+)
+```
 
-Unit tests are located in the `tests/` directory.
-To run all tests:
+### 3. Multi-Signal Simulation
+```python
+from simulation import ECGSimulator, EOGSimulator
 
+# ECG with arrhythmia
+ecg_sim = ECGSimulator(sampling_rate=1000)
+ecg_signal = ecg_sim.simulate_arrhythmias('pvc', base_heart_rate=75)
+
+# EOG with saccades
+eog_sim = EOGSimulator(sampling_rate=1000)
+eog_signal = eog_sim.simulate_saccades(amplitudes=[10, -10])
+```
+
+## Simulation Capabilities
+
+The framework provides extensive simulation capabilities for generating realistic biosignals:
+
+### Signal Types
+1. **EMG Signals**
+   - Isometric contractions
+   - Dynamic patterns
+   - Fatigue effects
+   - Complex movement sequences
+
+2. **ECG Signals**
+   - Normal sinus rhythm
+   - Various arrhythmias
+   - Ischemic patterns
+   - Conduction abnormalities
+
+3. **EOG Signals**
+   - Saccadic movements
+   - Smooth pursuit
+   - Fixations
+   - Blink patterns
+
+### Noise and Artifacts
+1. **Electrode Artifacts**
+   - Poor contact
+   - Electrode pop
+   - Impedance changes
+   - DC offset variations
+
+2. **Motion Artifacts**
+   - Electrode movement
+   - Cable motion
+   - Subject movement
+   - Baseline shifts
+
+3. **Interference**
+   - EMG crosstalk
+   - ECG interference
+   - Environmental noise
+   - Powerline interference
+
+## Running Tests
+
+The framework includes comprehensive test suites for all modules:
+
+### Running All Tests
 ```bash
-pytest -v
+pytest tests/
 ```
 
----
+### Running Specific Test Modules
+```bash
+pytest tests/test_simulation.py
+pytest tests/test_preprocessing.py
+pytest tests/test_features.py
+pytest tests/test_models.py
+```
 
-## 🔄 Continuous Integration
+### Test Coverage
+```bash
+pytest --cov=./ tests/
+```
 
-This repository includes a GitHub Actions workflow (`.github/workflows/ci.yml`) that:
+## Demo Notebook Guide
 
-- Lints the codebase with **flake8**
-- Runs **pytest** for all modules
+The [`notebooks/emg_pipeline_demo.ipynb`](notebooks/emg_pipeline_demo.ipynb) notebook provides an interactive demonstration of the framework's capabilities:
 
----
+### Notebook Sections:
+1. **Signal Generation Explorer**
+   - Interactive signal type selection
+   - Parameter adjustment
+   - Real-time visualization
 
-## 📈 Future Extensions
+2. **Real-time Processing Demo**
+   - Filter parameter tuning
+   - Noise reduction
+   - Signal quality metrics
 
-- Real-time streaming interface via BLE & UART
-- Deep feature learning (CNN, LSTM)
-- Cross-signal fusion (EMG + ECG + EOG)
-- Embedded deployment (TensorFlow Lite / Edge Impulse)
+3. **Feature Visualization**
+   - Time-domain features
+   - Frequency-domain features
+   - Nonlinear features
 
----
+### Running the Demo
+1. Start Jupyter Notebook:
+```bash
+jupyter notebook notebooks/emg_pipeline_demo.ipynb
+```
 
-## 🧑‍🔬 Citation
+2. Follow the interactive widgets to:
+   - Generate different signal types
+   - Adjust processing parameters
+   - Visualize features
+   - Experiment with noise levels
+
+## License
+
+MIT License © 2025 Brian Mwangi
+
+## Citation
 
 If you use this framework in your research, please cite:
 
-> **Mwangi, B. (2025). BioSignal Framework: A Modular Platform for EMG, ECG, and EOG Processing.**
-> GitHub Repository: [https://github.com/Ndambia/biosignal-framework](https://github.com//Ndambia//biosignal-framework)
-
----
-
-## 📜 License
-
-MIT License © 2025 Brian Mwangi
-Open for academic and industrial collaboration.
-
----
+> Mwangi, B. (2025). BioSignal Framework: A Modular Platform for EMG, ECG, and EOG Processing.
+> GitHub Repository: https://github.com/Ndambia/biosignal-framework

@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: biosig
+Version: 0.1
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: PyWavelets
+Requires-Dist: ipython
+Requires-Dist: jupyter
+Requires-Dist: pandas
+Requires-Dist: matplotlib
+Requires-Dist: ipywidgets
+Requires-Dist: scikit-learn
+Dynamic: requires-dist
