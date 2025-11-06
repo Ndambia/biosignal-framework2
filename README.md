@@ -253,4 +253,4 @@ MIT License © 2025 Brian Mwangi
 If you use this framework in your research, please cite:
 
 > Mwangi, B. (2025). BioSignal Framework: A Modular Platform for EMG, ECG, and EOG Processing.
-> GitHub Repository: https://github.com/Ndambia/biosignal-framework
+> GitHub Repository: https://github.com/Ndambia/biosignal-framework2
